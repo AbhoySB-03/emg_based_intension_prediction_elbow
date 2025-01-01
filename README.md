@@ -1,1 +1,1 @@
-# emg_based_intension_prediction_elbow
+# Human Motion Intention Prediction Based on sEMG Signal Profile
