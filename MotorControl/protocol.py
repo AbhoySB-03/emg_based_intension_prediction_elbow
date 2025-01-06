@@ -11,10 +11,9 @@ def lerp(a,b,t):
 
 def protocol_to_signal(protocol, T, del_t=0.01):
     flex_sig=lerp(angle_range[0], angle_range[1],np.sin(np.linspace(0,np.pi/2,int(T/del_t))))
-    ext_sig=lerp(angle_range[0], angle_range[1],np.cos(np.linspace(0,np.pi/2,int(T/del_t))))
+    ext_sig=lerp(angle_range[1], angle_range[0],np.sin(np.linspace(0,np.pi/2,int(T/del_t))))
     hold_up=np.ones(int(T/del_t))*angle_range[1]
     hold_down=np.ones(int(T/del_t))*angle_range[0]
-    nothing=np.ones(int(T/del_t))*np.NaN
 
     prot_dic={'F':flex_sig,'E':ext_sig,'H':hold_up,'h':hold_down}
     final_sig=np.ravel(np.array([prot_dic[l] for l in protocol]))
@@ -50,7 +49,7 @@ def animate(i):
         if i<len(angle_values): 
             print(i)       
             thetas=[-np.pi/2,angle_values[i]*np.pi/180]
-            lengths=[1.5,1.5]
+            lengths=[1.2,1.5]
 
             xp,yp=arm_points(thetas, lengths)
             
@@ -64,7 +63,4 @@ def animate(i):
 
 ani=FuncAnimation(fig, animate, interval=1000*del_t, blit=True)
 
-
 plt.show()
-
-
