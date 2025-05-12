@@ -1,10 +1,11 @@
 import os
 from scipy.io import loadmat
+import numpy as np
 import pandas as pd
 # from mat4py import loadmat
 
-BASE_DATA_DIR="../EMG_Data"
-BASE_EXTRACTION_PATH='../Extracted_Data'
+BASE_DATA_DIR="D:/IIT_D/Sem2/BTP/emg_based_intension_prediction_elbow/EMG_Data"
+BASE_EXTRACTION_PATH='D:/IIT_D/Sem2/BTP/emg_based_intension_prediction_elbow/Extracted_Data'
 
 def get_item_from_mat(key, d):
     '''
@@ -63,3 +64,42 @@ def read_emg_data(sub, num):
         signal_data.append(sig)
 
     return signal_data
+
+
+def read_extracted_combined_data(subject_name: str, folder_index):
+    '''
+    read_extracted_combined_data
+    ===
+    
+    Parameters
+    ---
+    
+    subject_name : string
+    
+    Returns
+    ---
+    t, angle, emgs
+     
+    t : Numpy 1D Array for time data
+    angle : Numpy 1D Array for elbow angle data
+    emgs : List of Numpy 1D Arrays for processed emg signals
+     
+    '''
+    # Get MVC data
+    mvc=pd.read_csv(f'{BASE_EXTRACTION_PATH}/{subject_name}/9/COMBINED/angle_emg.csv')
+    max_mvcs=np.zeros(9)
+    for i in range(9):
+        max_mvcs[i]=max(mvc[f'emg_mus_{i+1}'])
+
+
+    file_folder=f'{folder_index}'
+    data_combined=pd.read_csv(f'{BASE_EXTRACTION_PATH}/{subject_name}/{file_folder}/COMBINED/angle_emg.csv')
+
+
+    t=data_combined['time'].to_numpy()
+    angle=data_combined['elbow_angle'].to_numpy()
+    emgs=[data_combined[f'emg_mus_{i+1}'].to_numpy()/max_mvcs[i] for i in range(9)]
+
+    return t, angle, emgs
+
+
